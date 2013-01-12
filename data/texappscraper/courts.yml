@@ -4,3 +4,4 @@
   city: Austin
   scraper: OldSiteScraper
   site: http://www.3rdcoa.courts.state.tx.us
+  earliest: 1990-11-19
