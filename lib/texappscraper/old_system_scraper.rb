@@ -5,10 +5,11 @@ require 'texappscraper/court_data'
 module TexAppScraper
   class OldSiteScraper
 
-    # seconds to sleep after queries to avoid choking the server
-    THROTTLE_SLEEP = 3
+    attr_writer :throttle
 
-    def initialize
+    def initialize(throttle = 3)
+      # seconds to sleep after queries to avoid choking the server
+      @throttle = throttle
       @agent = Mechanize.new
       @agent.user_agent_alias = "Windows IE 9"
       @agent.max_history = 0
@@ -23,10 +24,10 @@ module TexAppScraper
 
     def scrape_case(court, id)
       data = case_data(court, id)
-      sleep THROTTLE_SLEEP
+      sleep @throttle
       data[:opinions] = data[:opinions].map do |opinion|
         event_id = opinion.delete :event_id
-        sleep THROTTLE_SLEEP
+        sleep @throttle
         opinion[:url] = pdf_url(court, scrape_opinion_id(court, event_id))
         opinion
       end
@@ -56,9 +57,9 @@ module TexAppScraper
       "#{court['site']}/opinions/pdfOpinion.asp?OpinionID=#{opinion_id}"
     end
 
-    def released_since(court, since, throttle = THROTTLE_SLEEP)
+    def released_since(court, since)
       (since..Date.today).map do |date|
-        sleep throttle
+        sleep @throttle
         released(court, date)
       end.flatten
     end
