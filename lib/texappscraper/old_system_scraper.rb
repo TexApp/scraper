@@ -5,13 +5,32 @@ require 'texappscraper/court_data'
 module TexAppScraper
   class OldSiteScraper
 
-    # second to sleep after queries to avoid choking the server
+    # seconds to sleep after queries to avoid choking the server
     THROTTLE_SLEEP = 3
 
     def initialize
       @agent = Mechanize.new
       @agent.user_agent_alias = "Windows IE 9"
       @agent.max_history = 0
+    end
+
+    # Main API method
+    def scrape(court, since)
+      released_since(court, since).map do |case_id|
+        scrape_case(court, case_id)
+      end
+    end
+
+    def scrape_case(court, id)
+      data = case_data(court, id)
+      sleep THROTTLE_SLEEP
+      data[:opinions] = data[:opinions].map do |opinion|
+        event_id = opinion.delete :event_id
+        sleep THROTTLE_SLEEP
+        opinion[:url] = pdf_url(court, scrape_opinion_id(court, event_id))
+        opinion
+      end
+      data
     end
 
     # the URL for a page listing opinions released

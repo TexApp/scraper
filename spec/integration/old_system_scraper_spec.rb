@@ -31,6 +31,24 @@ describe TexAppScraper::OldSiteScraper do
     subject.released(COURT, DATE).should =~ OPINIONS
   end
 
+  it "scrapes cases and opinions", :live, :api do
+    subject.scrape_case(3, 15688).should == {
+      :number => "03-10-00663-CV",
+      :filed => Date.new(2010, 9, 30),
+      :type => "Real Property",
+      :style => "Alvin W. Byrd, Jr.",
+      :versus => "Nicolas & Morris, a Texas General Partnership",
+      :original => false,
+      :opinions => [
+        {
+          :type => :memorandum,
+          :date => Date.new(2013, 1, 9),
+          :url => "http://www.3rdcoa.courts.state.tx.us/opinions/pdfOpinion.asp?OpinionID=21719"
+        }
+      ]
+    }
+  end
+
   CASE_FIXTURE = '03-12-00177-CV'
   CASE_URL = 'http://www.3rdcoa.courts.state.tx.us/opinions/case.asp?FilingID=16995'
   CASE_ID = 16995
