@@ -43,6 +43,7 @@ describe TexAppScraper::OldSiteScraper do
         {
           :type => :memorandum,
           :date => Date.new(2013, 1, 9),
+          :foreign_id => 21719,
           :url => "http://www.3rdcoa.courts.state.tx.us/opinions/pdfOpinion.asp?OpinionID=21719"
         }
       ]

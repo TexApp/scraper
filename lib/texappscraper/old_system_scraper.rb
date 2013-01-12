@@ -28,7 +28,9 @@ module TexAppScraper
       data[:opinions] = data[:opinions].map do |opinion|
         event_id = opinion.delete :event_id
         sleep @throttle
-        opinion[:url] = pdf_url(court, scrape_opinion_id(court, event_id))
+        foreign_id = scrape_opinion_id(court, event_id)
+        opinion[:foreign_id] = foreign_id
+        opinion[:url] = pdf_url(court, foreign_id)
         opinion
       end
       data
