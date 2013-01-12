@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'scraper/version'
+require 'texappscraper/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "scraper"
-  gem.version       = Scraper::VERSION
+  gem.name          = "texappscraper"
+  gem.version       = TexAppScraper::VERSION
   gem.authors       = ["Don Cruse", "Kyle Mitchell"]
   gem.description   = %q{Scrape slip opinions of the Texas Courts of Appeals}
   gem.summary       = <<-EOF
