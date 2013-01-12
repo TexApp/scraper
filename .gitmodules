@@ -1,0 +1,3 @@
+[submodule "lib/texappscraper/db"]
+	path = lib/texappscraper/db
+	url = git://github.com/texapp/models.git

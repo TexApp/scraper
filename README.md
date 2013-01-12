@@ -1,4 +1,6 @@
-# Scraper
+# TexAppScraper
+
+Scrape opinions of Texas Courts of Appeals, saving metadata to a local database and PDF files to CloudFiles.
 
 ## Contributing
 

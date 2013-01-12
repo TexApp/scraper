@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'scraper'
+require 'texappscraper'
+TexAppScraper::CLI.start(ARGV)
