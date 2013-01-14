@@ -60,7 +60,7 @@ module TexAppScraper
     end
 
     def released_since(court, since)
-      (since..Date.today).select { |d| !d.saturday? and !d.sunday? }. map do |date|
+      (since..Date.today).select { |d| !d.saturday? and !d.sunday? }.map do |date|
         sleep @throttle
         released(court, date)
       end.flatten
