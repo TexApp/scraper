@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'fakeweb'
 require 'date'
+require 'yaml'
 require 'texappscraper/old_system_scraper'
 
 def live_and_cached(should, url, fixture, &block)
@@ -79,5 +80,13 @@ describe TexAppScraper::OldSiteScraper do
   EVENT_FIXTURE = '3-event-470586'
   live_and_cached "scrapes opinion IDs", EVENT_URL, EVENT_FIXTURE do |subject|
     subject.scrape_opinion_id(COURT, EVENT_ID).should == OPINION_ID
+  end
+
+  it "scrapes quarterly released order/opinion pages" do
+    URL = "http://www.3rdcoa.courts.state.tx.us/opinions/docketsrch.asp?DocketYear=2012&Yr_Quarter=1&Submit1=Refresh"
+    fixture = 'spec/fixtures/3-quarterly-2012-1-3'
+    FakeWeb.register_uri :get, URL,
+      :response => File.read(fixture)
+    subject.scrape_quarter(3, 2012, 1).should =~ YAML::load_file(fixture + ".yml")
   end
 end

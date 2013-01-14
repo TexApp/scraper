@@ -36,6 +36,19 @@ module TexAppScraper
       data
     end
 
+    def scrape_quarter(court, year, quarter)
+      xpath = './/*[@id="content-middle2"]/table[2]//tr[position()>1]/td[2]'
+      page = @agent.get(quarter_url(court, year, quarter))
+      page.search(xpath).to_a.map do |elem|
+        Date.strptime(elem.text, '%m/%d/%Y')
+      end
+    end
+
+    def quarter_url(court, year, quarter)
+      court = TexAppScraper::COURTS[court]
+      "#{court['site']}/opinions/docketsrch.asp?DocketYear=#{year}&Yr_Quarter=#{quarter}"
+    end
+
     # the URL for a page listing opinions released
     # on <date> from the court number <court>
     def released_opinions_url(court, date)
