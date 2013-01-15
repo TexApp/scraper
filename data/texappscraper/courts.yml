@@ -36,9 +36,9 @@
   scraper: OldSystemScraper
   site: http://www.8thcoa.courts.state.tx.us
 9:
-  name: ninth court of appeals
-  city: texarkana
-  scraper: newsystemscraper
+  name: Ninth Court of Appeals
+  city: Texarkana
+  scraper: TAMESScraper
 10:
   name: Tenth Court of Appeals
   city: Waco
