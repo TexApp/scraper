@@ -1,158 +1,126 @@
-require 'mechanize'
-require 'date'
-require 'texappscraper/court_data'
+require 'texappscraper/throttled_agent'
+require 'texappscraper/courts'
 
 module TexAppScraper
-  class OldSiteScraper
+  class OldSystemScraper
+    THROTTLE_DELAY = 1
 
-    attr_writer :throttle
-
-    def initialize(throttle = 3)
-      # seconds to sleep after queries to avoid choking the server
-      @throttle = throttle
-      @agent = Mechanize.new
-      @agent.user_agent_alias = "Windows IE 9"
-      @agent.max_history = 0
+    def initialize court, delay=THROTTLE_DELAY
+      delay = 0 if delay == :no_throttling
+      @court = court
+      @agent = ThrottledAgent.new delay
+      @court_number = court
+      @court = TexAppScraper::COURTS[court]
+      @base = @court['site'] + "/opinions"
     end
 
-    # Main API method
-    def scrape(court, since)
-      released_since(court, since).map do |case_id|
-        scrape_case(court, case_id)
+    def scrape date
+      cases_with_opinions_on_day(date).each do |docket_number, case_id|
+        opinions_for_case(case_id) { |o| yield o }
       end
     end
 
-    def scrape_case(court, id)
-      data = case_data(court, id)
-      sleep @throttle
-      data[:opinions] = data[:opinions].map do |opinion|
-        event_id = opinion.delete :event_id
-        sleep @throttle
-        foreign_id = scrape_opinion_id(court, event_id)
-        opinion[:foreign_id] = foreign_id
-        opinion[:url] = pdf_url(court, foreign_id)
-        opinion
-      end
-      data
+    def pdf_url opinion_id
+      "#{@base}/pdfOpinion.asp?OpinionID=#{opinion_id}"
     end
 
-    def scrape_quarter(court, year, quarter)
-      xpath = './/*[@id="content-middle2"]/table[2]//tr[position()>1]/td[2]'
-      page = @agent.get(quarter_url(court, year, quarter))
-      page.search(xpath).to_a.map do |elem|
-        Date.strptime(elem.text, '%m/%d/%Y')
-      end
+    EVENT_KEY = 'EventID'
+    OPINION_LINK_XPATH = './/*[@id="content-middle2"]/table/tr[2]/td/table[2]/tr[2]/td[1]/a'
+    OPINION_LINK_RE = /Opinion\.asp\?OpinionID=(\d+)/
+    def opinion_id event_id
+      url = "#{@base}/event.asp"
+      page = @agent.get url, { EVENT_KEY => event_id }
+      link = page.link_with :href => OPINION_LINK_RE
+      OPINION_LINK_RE.match(link.href)[1].to_i
     end
 
-    def quarter_url(court, year, quarter)
-      court = TexAppScraper::COURTS[court]
-      "#{court['site']}/opinions/docketsrch.asp?DocketYear=#{year}&Yr_Quarter=#{quarter}"
-    end
-
-    # the URL for a page listing opinions released
-    # on <date> from the court number <court>
-    def released_opinions_url(court, date)
-      court = TexAppScraper::COURTS[court]
-      datestring = date.strftime("%Y%m%d")
-      "#{court['site']}/opinions/docket.asp?FullDate=#{datestring}"
-    end
-
-    def case_url(court, id)
-      court = TexAppScraper::COURTS[court]
-      "#{court['site']}/opinions/case.asp?FilingID=#{id}"
-    end
-
-    def event_url(court, event_id)
-      court = TexAppScraper::COURTS[court]
-      "#{court['site']}/opinions/event.asp?EventID=#{event_id}"
-    end
-
-    def pdf_url(court, opinion_id)
-      court = TexAppScraper::COURTS[court]
-      "#{court['site']}/opinions/pdfOpinion.asp?OpinionID=#{opinion_id}"
-    end
-
-    def released_since(court, since)
-      (since..Date.today).map do |date|
-        sleep @throttle
-        released(court, date)
-      end.flatten
-    end
-
-    CASE_RE = /^\/opinions\/case.asp/
-    ID_RE = /FilingID=(\d+)/
-    def released(court, date)
-      url = released_opinions_url(court, date)
-      @agent.get(url) do |page|
-        return page.links_with(:href => CASE_RE).to_a.map do |link|
-          ID_RE.match(link.href)[1].to_i
-        end
+    QUARTER_KEYS = %w{DocketYear Yr_Quarter}
+    CASE_TD = './/*[@id="content-middle2"]/table[2]/tr[position()>1]/td[2]'
+    def opinions_in_quarter year, quarter
+      url = "#{@base}/docketsrch.asp"
+      page = @agent.get url, Hash[QUARTER_KEYS.zip [year, quarter]]
+      page.search(CASE_TD).to_a.map do |td|
+        Date.strptime td.text, '%m/%d/%Y'
       end
     end
 
-    TYPE_SYMBOLS = {
-      'Memorandum opinion issued' => :memorandum,
-      'Opinion issued' => :opinion
+    DAY_KEY = 'FullDate'
+    CASE_LINK_RE = %r{/opinions/case\.asp\?FilingID=(\d+)}
+    def cases_with_opinions_on_day day
+      url = "#{@base}/docket.asp"
+      page = @agent.get url, { DAY_KEY => day.strftime("%Y%m%d") }
+      page.links_with(:href => CASE_LINK_RE).reduce({}) do |mem, link|
+        case_id = CASE_LINK_RE.match(link.href)[1].to_i
+        mem.merge({ link.text => case_id })
+      end
+    end
+
+    CASE_KEY = 'FilingID'
+    def opinions_for_case case_id
+      url = "#{@base}/case.asp"
+      page = @agent.get url, { CASE_KEY => case_id }
+      the_case = case_metadata page
+      yield_opinions page do |o|
+        yield ({
+          :case => the_case,
+          :date => o[:date],
+          :type => o[:type],
+          :url => pdf_url(o[:id])
+        })
+      end
+    end
+
+    ROW_XPATH = './/*[@id="content-middle2"]/table/tr[2]/td/table[2]/tr'
+    OPINION_TYPES = {
+      "Memorandum opinion issued" => :memorandum,
+      "Opinion issued" => :opinion
     }
-    EVENTS = './/*[@id="content-middle2"]/table/tr[2]/td/table[2]/tr'
-
-    def case_data(court, id)
-      @agent.get(case_url(court, id)) do |page|
-        meta = scrape_case_meta(page)
-        meta[:opinions] = scrape_opinion_events(page)
-        return meta
+    EVENT_RE = %r{event\.asp\?EventID=(\d+)$}
+    def yield_opinions page
+      page.search(ROW_XPATH).to_a.slice(1..-2).each do |row|
+        tds = row.search('.//td').to_a
+        type = tds[2].text.strip
+        if OPINION_TYPES.keys.include? type
+          date = Date.strptime tds[1].text.strip, '%m/%d/%Y'
+          href = row.css('a').first.attr('href')
+          event_id = EVENT_RE.match(href)[1].to_i
+          yield ({
+            :type => OPINION_TYPES[type],
+            :date => date,
+            :id => opinion_id(event_id)
+          })
+        end
       end
     end
 
     META = '//*[@id="content-middle2"]/table/tr[2]/td/table[1]/tr/td/table/tr'
     META_KEYS = {
-      'Case Number:' => :number,
-      'Date Filed:' => :filed,
-      'Case Type:' => :type,
+      'Case Number:' => :docket_number,
       'Style:' => :style,
-      'v.:' => :versus,
-      'Original Proceeding:' => :original
+      'v.:' => :versus
     }
     META_FORMAT = {
-      :filed => lambda {|x| Date.strptime(x, '%m/%d/%Y')},
-      :original => lambda {|x| x == 'Yes'}
+      :filed => lambda { |x| Date.strptime(x, '%m/%d/%Y')}
     }
-
-    def scrape_case_meta(page)
-      page.search(META).to_a.reduce({}) do |mem, tr|
+    def case_metadata page
+      meta = {}
+      page.search(META).to_a.each do |tr|
         key = tr.at_css('td.BreadCrumbs').text
-        # terminal non-breaking spaces
+        next unless META_KEYS.keys.include? key
         value = tr.at_css('td.TextNormal').text.gsub("\u00A0"," ").strip
-        meta_key= META_KEYS[key]
+        meta_key = META_KEYS[key]
         format = META_FORMAT[meta_key]
-        mem[meta_key] = format.nil? ? value : format.call(value)
-        mem
+        meta[meta_key] = format.nil? ? value : format.call(value)
       end
+      if meta[:versus] && meta[:versus].length > 0
+        meta[:style] = "#{meta[:style]} v. #{meta[:versus]}"
+      end
+      return({
+        :court => @court_number,
+        :docket_number => meta[:docket_number],
+        :style => meta[:style]
+      })
     end
 
-    def scrape_opinion_events(page)
-      page.search(EVENTS).to_a.slice(1..-2).reduce [] do |mem, tr|
-        tds = tr.search('.//td')
-        type = tds[2].text
-        if TYPE_SYMBOLS.keys.include? type
-          href = tds[0].at_css('a').attr('href')
-          date = Date.strptime(tds[1].text, '%m/%d/%Y')
-          description = tds[3].text
-          mem << {
-            :type => TYPE_SYMBOLS[type],
-            :date => date,
-            :event_id => /EventID=(\d+)/.match(href)[1].to_i
-          }
-        end
-        mem
-      end
-    end
-
-    def scrape_opinion_id(court, event_id)
-      @agent.get(event_url(court, event_id)) do |page|
-        link = page.link_with(:href => /^Opinion.asp/)
-        return /OpinionID=(\d+)/.match(link.href)[1].to_i
-      end
-    end
   end
 end

@@ -2,30 +2,30 @@
 2:
   name: Second Court of Appeals
   city: Fort Worth
-  scraper: OldSiteScraper
+  scraper: OldSystemScraper
   site: http://www.2ndcoa.courts.state.tx.us
 3:
   name: Third Court of Appeals
   city: Austin
-  scraper: OldSiteScraper
+  scraper: OldSystemScraper
   site: http://www.3rdcoa.courts.state.tx.us
 7:
   name: Seventh Court of Appeals
   city: Amarillo
-  scraper: OldSiteScraper
+  scraper: OldSystemScraper
   site: http://www.7thcoa.courts.state.tx.us
 8:
   name: Eighth Court of Appeals
   city: El Paso
-  scraper: OldSiteScraper
+  scraper: OldSystemScraper
   site: http://www.8thcoa.courts.state.tx.us
 10:
   name: Tenth Court of Appeals
   city: Waco
-  scraper: OldSiteScraper
+  scraper: OldSystemScraper
   site: http://www.10thcoa.courts.state.tx.us
 11:
   name: Eleventh Court of Appeals
   city: Eastland
-  scraper: OldSiteScraper
+  scraper: OldSystemScraper
   site: http://www.11thcoa.courts.state.tx.us

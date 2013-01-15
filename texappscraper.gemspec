@@ -30,4 +30,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "fakeweb", "~>1.3.0"
   gem.add_development_dependency "rspec", "~>2.12.0"
   gem.add_development_dependency "capistrano", "~>2.14.1"
+  gem.add_development_dependency "autotest", "~>4.4.6"
+  gem.add_development_dependency "autotest-inotify", "~>0.0.6"
 end
