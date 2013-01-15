@@ -23,11 +23,11 @@ module TexAppScraper
       :banner => "scrape previously scraped days again"
     option :from, :aliases => '-f',
       :type => :string,
-      :default => Date.new(2003, 1, 1),
+      :default => "2003-01-01",
       :banner => "scrape opinions from YYYY-MM-DD"
     option :through, :aliases => '-t',
       :type => :string,
-      :default => Date.today,
+      :default => Date.today.strftime("%Y-%m-%d"),
       :banner => "scrape opinions through YYYY-MM-DD"
     option :courts, :aliases => '-c',
       :multiple => :string,
