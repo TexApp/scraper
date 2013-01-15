@@ -41,7 +41,7 @@ module TexAppScraper
             docket_number = case_hash[:docket_number]
             @log.info "Scraped opinion for case #{docket_number}"
             case_record = cases[docket_number] || save_case(case_hash)
-            save_opinion case_record, opinion_hash
+            save_opinion case_record, opinion_hash rescue next
           end
 
           Log.create :court => court_number, :date => date
@@ -77,7 +77,12 @@ module TexAppScraper
       # file
       sleep @delay
       file = open opinion_hash[:url]
-      md5sum = Digest::MD5.hexdigest file.path
+      @log.info opinion_hash[:url]
+      begin
+        md5sum = Digest::MD5.hexdigest file.path
+      rescue
+        raise "no PDF file"
+      end
       opinion_hash.merge!({ :md5sum => md5sum })
       @log.info "Checksum: " + md5sum
       save_file case_record.docket_number, md5sum, file
