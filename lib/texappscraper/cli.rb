@@ -4,7 +4,6 @@ require 'texappscraper'
 require 'thor'
 require 'logger'
 require 'dm-core'
-require 'texappscraper/mirror'
 
 module TexAppScraper
   CONFIG = File.join(File.dirname(__FILE__), '..', '..', 'config', 'credentials.yml')
@@ -18,9 +17,18 @@ module TexAppScraper
       :type => :boolean,
       :default => false,
       :banner => "verbose log output"
+    option :again, :aliases => '-a',
+      :type => :boolean,
+      :default => false,
+      :banner => "scrape previously scraped days again"
     option :from, :aliases => '-f',
       :type => :string,
-      :banner => "scrape opinions after YYYY-MM-DD"
+      :default => Date.new(2003, 1, 1),
+      :banner => "scrape opinions from YYYY-MM-DD"
+    option :through, :aliases => '-t',
+      :type => :string,
+      :default => Date.today,
+      :banner => "scrape opinions through YYYY-MM-DD"
     option :courts, :aliases => '-c',
       :multiple => :string,
       :default => TexAppScraper::COURTS.keys.join(','),
@@ -34,7 +42,6 @@ module TexAppScraper
     def scrape
       # database connection
       DataMapper.setup(:default, CREDENTIALS['database'])
-      DataMapper::Logger.new(STDOUT, :debug)
 
       # set up logging
       $log = Logger.new(options.log)
@@ -54,12 +61,14 @@ module TexAppScraper
       
       container_name = CREDENTIALS['container']
       $log.info "CloudFiles container: #{container_name}"
-      cloudfiles.container(container_name)
+      cloudfiles.container container_name
 
-      from = options.from ? Date.parse(options.from) : nil
+      from = Date.parse options.from
+      through = Date.parse options.through
 
       $log.info "Mirroring cases"
-      TexAppScraper::mirror(courts, from, cloudfiles, container_name)
+      cacher = Cacher.new cloudfiles, container_name, $log
+      cacher.mirror courts, from, through, options.again
     end
 
     option :migrate, :aliases => '-m', :type => :boolean, :default => false,

@@ -2,9 +2,9 @@ HTTP/1.1 200 OK
 Cache-Control: private
 Content-Type: text/html
 Server: Microsoft-IIS/7.5
-Set-Cookie: ASPSESSIONIDCASCAAAA=ANHANBPDFHNAFHDOPFGBJLMM; path=/
+Set-Cookie: ASPSESSIONIDSQCDADRC=PBEOELCCLFEHOCAFLEFGDDHC; path=/
 X-Powered-By: ASP.NET
-Date: Sat, 12 Jan 2013 04:42:01 GMT
+Date: Tue, 15 Jan 2013 01:41:02 GMT
 Connection: close
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
@@ -16,6 +16,7 @@ function openWindow(windowName, urlLoc, w, h, top, left) {
 	if (windowName.opener == null) windowName.opener = self;
 }
 //--></SCRIPT>
+
 <HTML><HEAD>
 <META http-equiv="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 <!--MAKE SURE YOU CHANGE THE META TAGS BASED ON YOUR PAGE-->
@@ -55,15 +56,15 @@ function openWindow(windowName, urlLoc, w, h, top, left) {
 <tr>
 <!--left picture-->
 	<td>
-<img width='124' height='100' alt='Burleson  County courthouse' title='Burleson  County courthouse' src='../images/courthouseam/Burleson.jpg'>
+<img width='124' height='100' alt='Kaufman  County courthouse' title='Kaufman  County courthouse' src='../images/courthouseam/Kaufman.jpg'>
 	</td>
 
 <!--middle picture-->
-	<td><img width='124' height='100' alt='Capitol Dome ' title='Capitol Dome ' src='../images/arch/Capitol_Dome.jpg'></td>
+	<td><img width='124' height='100' alt='State Capitol NW View ' title='State Capitol NW View ' src='../images/arch/State_Capitol_NW_View.jpg'></td>
 
 <!--right picture-->	
 	<td>
-<img width='124' height='100' alt='Wheeler  County courthouse' title='Wheeler  County courthouse' src='../images/courthousenz/Wheeler.jpg'>
+<img width='124' height='100' alt='Shackelford  County courthouse' title='Shackelford  County courthouse' src='../images/courthousenz/Shackelford.jpg'>
 	</td>
 </tr>
 </table>
@@ -144,49 +145,19 @@ Third
 	  		</DIV><!--End of content-top-->
       		<DIV id=content-middle>
       	 	<DIV id=content-middle2>
-
+      			
 	     		
 
 <!--MAIN Content Table Begin--> 
-	<TABLE WIDTH=100%>
+	<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH=100%>
     <TR>
-		<TD BGCOLOR="white"><BR><BR>
-			
-				<TABLE CELLPADDING="2" CELLSPACING="0" BORDER="0" WIDTH="100%">
-					<TR>
-						<TD CLASS="BreadCrumbs" BGCOLOR="White" VALIGN="middle">
-							<IMG SRC="../resource/images/icons/folder2.gif" ALIGN="absmiddle" WIDTH="20" HEIGHT="20" HSPACE="0" ALT="Case Search Results">
-						</TD>
-						<TD CLASS="BreadCrumbs" BGCOLOR="White" VALIGN="middle" WIDTH=85%>
-							<A HREF="case.asp?FilingID=16995" CLASS="BreadCrumbs">Case # 03-12-00177-CV</A>  -> 
-							Event: Memorandum opinion issued
-						</TD>
-						<TD Class="TextBlue" BGCOLOR="White" VALIGN="middle" WIDTH=15%>
-							<A HREF="https://www.3rdcoa.courts.state.tx.us/members/cw_add.aspx?FullCaseNumber=03-12-00177-CV&cID=coa3">CaseMail</a>
-			    		</TD>
-					</TR>
-				</TABLE>
-			
-		</TD>
-	</TR><TR>
-		<TD CLASS="TitleBlue">
-			
-			<BR>
-			Event Information:
-			<TABLE BGCOLOR="#A7A895" BORDER="0" CELLSPACING="0" CELLPADDING="1" WIDTH="100%"><TR><TD>
-<TABLE BGCOLOR="#EBEBE2" BORDER="0" CELLSPACING="0" CELLPADDING="3" WIDTH="100%" ><TR><TD WIDTH="25%" NOWRAP CLASS="BreadCrumbs">Event Type:</TD><TD CLASS="TextNormal">Memorandum opinion issued&nbsp;</TD></TR><TR><TD WIDTH="25%" NOWRAP CLASS="BreadCrumbs">Description:</TD><TD CLASS="TextNormal">&nbsp;&nbsp;</TD></TR><TR><TD WIDTH="25%" NOWRAP CLASS="BreadCrumbs">Date:</TD><TD CLASS="TextNormal">1/10/2013&nbsp;</TD></TR><TR><TD WIDTH="25%" NOWRAP CLASS="BreadCrumbs">Disposition:</TD><TD CLASS="TextNormal">Reversed and Remanded&nbsp;</TD></TR><TR><TD WIDTH="25%" NOWRAP CLASS="BreadCrumbs">Opinion Written:</TD><TD CLASS="TextNormal">Yes&nbsp;</TD></TR></TABLE>
-</TD></TR></TABLE>
-			
-			<BR>
-			<SPAN CLASS="TitleBlue">Opinions Related to this Event:</SPAN>
-			<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%"><TR BGCOLOR="#000099" VALIGN=TOP><TH id="PRECOL1" CLASS="TextSmallWhite" ALIGN=LEFT><B>&nbsp;</B></TH><TH id="FIELD2" CLASS="TextSmallWhite" ALIGN=LEFT WIDTH="0.999444752915047%"><B>Date Issued</B></TH></TR><TR BGCOLOR=White VALIGN=TOP><TD CLASS="TextSmall" headers="PRECOL1" BGCOLOR=White><A HREF=Opinion.asp?OpinionID=21724><IMG SRC="../resource/opinions/images/fldr.gif" ALIGN="bottom" WIDTH="23" HEIGHT="15" BORDER="0" ALT=""></A></TD><TD headers="FIELD2" CLASS="TextSmall" BGCOLOR=White>1/10/2013</TD></TR><TR><TD COLSPAN=2><HR WIDTH="100%"></TD></TR></TABLE>
-			<BR><BR>
-		</TD>
-	</TR>
-	<TR>
-		<TD CLASS="TextNormal" BGCOLOR="#F5F5F5">
-			<IMG SRC="../resource/images/icons/hint.gif" WIDTH="20" HEIGHT="20" ALT="" BORDER="0">
-			<B>Hint:</B> Click on the folder icons above for more case information.
+		<TD><BR><BR><BR>
+<DIV id="submission">
+<DIV id="print"><a href="printdocket.asp?FullDate=20120113">Printer-Friendly Version</a><BR><BR><BR></DIV>
+		  <p align="center"><span class="TitleBlack">Released Opinions<br>January 13, 2012</span><br></p><p align="center"><br><span class="TextLargeBlack"><u>Civil Causes Decided:</u></span></p><br><p><span class="TextLargeBlack">DISMISSED ON APPELLANT'S MOTION: </span><a href="/opinions/htmlopinion.asp?OpinionId=20757"  class="BreadCrumbs">Opinion by Justice Goodwin</a>&nbsp&nbsp<a href="/opinions/PDFOpinion.asp?OpinionId=20757" class="BreadCrumbs">[ PDF ]</a><span class="TextNormal"><br><b>&nbsp;&nbsp;&nbsp;&nbsp;(Before Justices Puryear, Henson and Goodwin)</b></span><br><table border="0" cellPadding="0" cellSpacing="0"  width="100%"><tr class="TextNormal"><td width=20% valign="top"><u><a href="/opinions/case.asp?FilingID=16389" class="BreadCrumbs">03-11-00470-CV</a></u></td><td width=80% valign="top">Enrique Flores v. Security State Bank & Trust and Billy Joe Morris--Appeal from 53rd District Court of Travis County</td></tr></table></p><p><span class="TextLargeBlack">DISMISSED FOR WANT OF JURISDICTION: </span><a href="/opinions/htmlopinion.asp?OpinionId=20758"  class="BreadCrumbs">Opinion by Justice Rose</a>&nbsp&nbsp<a href="/opinions/PDFOpinion.asp?OpinionId=20758" class="BreadCrumbs">[ PDF ]</a><span class="TextNormal"><br><b>&nbsp;&nbsp;&nbsp;&nbsp;(Before Chief Justice Jones, Justices Pemberton and Rose)</b></span><br><table border="0" cellPadding="0" cellSpacing="0"  width="100%"><tr class="TextNormal"><td width=20% valign="top"><u><a href="/opinions/case.asp?FilingID=16817" class="BreadCrumbs">03-12-00003-CV</a></u></td><td width=80% valign="top">In re Charlie Flentroy--Appeal from 403rd District Court of Travis County</td></tr></table></p><p align="center"><br><span class="TextLargeBlack"><u>Criminal Causes Decided:</u></span></p><br>
+</DIV>
+
+<br /><br />		
 		</TD>
 	</TR>
 	</TABLE>
