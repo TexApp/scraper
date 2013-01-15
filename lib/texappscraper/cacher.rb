@@ -9,7 +9,8 @@ module TexAppScraper
     attr_accessor :container # where to save files
     attr_accessor :log
 
-    def initialize cloudfiles, container, log=nil
+    def initialize delay, cloudfiles, container, log=nil
+      @delay = delay
       @cloudfiles = cloudfiles
       @container = container
       @log = log || Logger.new("/dev/null")
@@ -24,7 +25,7 @@ module TexAppScraper
         court_number = court[:number]
         @log.info court['name']
 
-        scraper = TexAppScraper::for(court_number)
+        scraper = TexAppScraper::for court_number, @delay
 
         date_range.each do |date|
           # already scraped?
@@ -74,6 +75,7 @@ module TexAppScraper
       @log.info "Scraped opinion #{opinion_hash[:url]}"
 
       # file
+      sleep @delay
       file = open opinion_hash[:url]
       md5sum = Digest::MD5.hexdigest file.path
       opinion_hash.merge!({ :md5sum => md5sum })

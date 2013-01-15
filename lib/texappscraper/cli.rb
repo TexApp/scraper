@@ -33,6 +33,10 @@ module TexAppScraper
       :multiple => :string,
       :default => TexAppScraper::COURTS.keys.join(','),
       :banner => 'courts to scrape'
+    option :delay, :aliases => '-d',
+      :type => :numeric,
+      :default => 5,
+      :banner => 'delay between server requests'
     desc "scrape", (
       <<-EOS
         Scrape data and opinions from the courts of the Texas Courts of Appeals,
@@ -67,7 +71,7 @@ module TexAppScraper
       through = Date.parse options.through
 
       $log.info "Mirroring cases"
-      cacher = Cacher.new cloudfiles, container_name, $log
+      cacher = Cacher.new options.delay, cloudfiles, container_name, $log
       cacher.mirror courts, from, through, options.again
     end
 
