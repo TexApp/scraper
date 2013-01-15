@@ -1,5 +1,6 @@
 require "texappscraper/version"
 require "texappscraper/old_system_scraper"
+require "texappscraper/tames_scraper"
 require "texappscraper/courts"
 require "texappscraper/cacher"
 
